@@ -1,0 +1,678 @@
+\documentclass[11pt,a4paper]{article}
+
+% -----------------------------------------------------
+% Packages
+% -----------------------------------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{titling}
+
+% -----------------------------------------------------
+% bvraghav-tiet-ucs503p-article.sty
+% -----------------------------------------------------
+
+% Variable: Lab Instructor
+\makeatletter
+\newcommand{\BvrSetLabInstructor}[1]{%
+  \gdef\Bvr@LabInstructor{#1}%
+}
+
+% Default
+\newcommand{\Bvr@LabInstructor}{Dr. Raghav B. Venkataramaiyer}
+
+% Public accessor
+\newcommand{\BvrLabInstructorValue}{\Bvr@LabInstructor}
+\makeatother
+
+% -----------------------------------------------------
+% Title formatting
+% -----------------------------------------------------
+
+\pretitle{%
+  \begin{center}
+  \bfseries
+  \fontsize{18bp}{18bp}\selectfont
+}
+
+\makeatletter
+\newcommand{\BvrSubtitle}[1]{%
+  \posttitle{%
+    \par
+    \end{center}
+    \begin{center}
+    \large #1
+    \end{center}
+    \vskip 0.5em
+  }%
+}
+\makeatother
+
+% -----------------------------------------------------
+% Section hints
+% -----------------------------------------------------
+
+\newcommand{\BvrHint}[1]{%
+  {\normalfont\normalsize\itshape\hfill #1}%
+}
+
+% -----------------------------------------------------
+% Project Title
+% -----------------------------------------------------
+
+\title{
+  \textbf{SAGE} ---
+  \textit{Smart Adaptive Gating Engine for Cost-Efficient Code-Model Selection}
+}
+
+% -----------------------------------------------------
+% Lab Instructor
+% -----------------------------------------------------
+
+\BvrSetLabInstructor{Ms. Paramveer Sidhu}
+
+% -----------------------------------------------------
+% Subtitle
+% -----------------------------------------------------
+
+\BvrSubtitle{%
+  Project Proposal for UCS503P \\
+  Submitted to: \BvrLabInstructorValue \\[2pt]
+  \bfseries Thapar Institute of Engineering and Technology%
+}
+
+% -----------------------------------------------------
+% Student Details
+% -----------------------------------------------------
+
+\author{% 
+  \begin{tabular}{c@{\qquad}c@{\qquad}c}
+    \textbf{Krishna Gautam} & \textbf{Prateek Yadav} & \textbf{Harshvardhan} \\[3pt]
+    Roll No: \texttt{1024030733} & Roll No: \texttt{1024031149} & Roll No: \texttt{1024030744} \\
+    \texttt{kgautam\_be24@thapar.edu} & \texttt{pyadav\_be24@thapar.edu} & \texttt{hharshvardhan\_be24@thapar.edu}
+  \end{tabular}%
+}
+
+\date{\today}
+
+% -----------------------------------------------------
+% Document
+% -----------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+% -----------------------------------------------------
+\section{Higher-order goal%
+  \texorpdfstring{\BvrHint{\ldots secondary framing}}{}}
+% -----------------------------------------------------
+
+This project aims to improve the efficiency of AI-assisted
+software development by automatically selecting an appropriate
+code-generation model for each coding request. While modern
+large language models can solve a wide range of programming
+tasks, using the strongest model for every request can result
+in unnecessary cost, latency, and computational usage. The
+immediate engineering objective is to translate
+\emph{cost-efficient and quality-aware model selection} into
+a measurable and deployable software solution.
+
+% -----------------------------------------------------
+\section{Time-to-value%
+  \texorpdfstring{\BvrHint{\ldots primary heuristic}}{}}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item We will deliver meaningful increments quickly by
+    first implementing a baseline router that classifies
+    coding prompts into difficulty levels and maps them to
+    suitable Claude models.
+
+    \item We will prioritize measurable experimentation
+    through short iterations, comparing the routing system
+    against a baseline that always uses a stronger model.
+
+    \item Success is defined by measurable improvement in
+    cost and latency while maintaining acceptable coding
+    quality and correctness.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Problem Statement}
+% -----------------------------------------------------
+
+AI coding assistants increasingly rely on powerful large
+language models to generate, debug, explain, and refactor
+software. However, not every coding request requires the
+same level of reasoning capability. A simple syntax question
+and a complex multi-file debugging task may both be sent to
+the same expensive model even though their computational
+requirements are very different. Common pain points include:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Over-provisioning:} simple coding tasks may
+    consume the capabilities and cost of a high-end reasoning
+    model unnecessarily.
+
+    \item \textbf{Cost inefficiency:} repeatedly using a
+    stronger model increases token consumption and overall
+    inference cost for workloads containing many easy or
+    moderate tasks.
+
+    \item \textbf{Latency:} stronger models may introduce
+    additional response time when a faster model would have
+    been sufficient.
+
+    \item \textbf{Difficult model selection:} users and
+    applications generally have to decide manually which
+    model should handle a particular coding request.
+
+    \item \textbf{Quality-risk tradeoff:} selecting a cheaper
+    model can reduce cost, but selecting one that is too weak
+    for a difficult task can reduce correctness and usefulness.
+
+\end{itemize}
+
+\textbf{Why this matters now (contextual relevance):}
+As AI-assisted programming becomes a regular part of software
+development, efficient model utilization becomes increasingly
+important. A routing layer that can automatically match task
+complexity with model capability can reduce unnecessary
+inference cost without simply sacrificing output quality.
+
+% -----------------------------------------------------
+\section{Proposed Solution%
+  \texorpdfstring{\BvrHint{\ldots Software Proposition}}{}}
+% -----------------------------------------------------
+
+\subsection{Overview}
+
+Build a software-based ``gating engine'' that analyzes a
+coding request before sending it to a Claude model. The system
+will estimate the complexity of the task, select an appropriate
+model tier, forward the request, and record the result for
+evaluation.
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Coding prompt intake:} accept a programming
+    request together with optional context such as language,
+    code snippets, files, and task type.
+
+    \item \textbf{Prompt analysis:} extract signals related
+    to coding difficulty, reasoning requirements, context
+    size, debugging complexity, and expected output.
+
+    \item \textbf{Gating engine:} assign the request to an
+    appropriate difficulty/model tier.
+
+    \item \textbf{Model execution:} send the request to the
+    selected Claude model through the appropriate API.
+
+    \item \textbf{Evaluation and logging:} record routing
+    decisions, token usage, latency, and task outcomes for
+    comparison against baseline strategies.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Core workflow}
+% -----------------------------------------------------
+
+\begin{enumerate}[leftmargin=0.7cm]
+
+    \item User submits a coding prompt to the SAGE gateway.
+
+    \item The system extracts relevant task characteristics,
+    such as task type, code/context size, reasoning depth,
+    and expected implementation complexity.
+
+    \item The gating layer assigns a difficulty score or
+    difficulty class such as Easy, Moderate, Hard, or
+    Very Hard.
+
+    \item The routing policy maps the difficulty class and
+    confidence to a suitable Claude model.
+
+    \item The selected model generates the response.
+
+    \item The system records cost-related and quality-related
+    metrics and can identify cases where a stronger model would
+    have been more appropriate.
+
+\end{enumerate}
+
+% -----------------------------------------------------
+\subsection{Operational constraints for an educational setting}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item The initial implementation will focus on coding
+    prompts rather than attempting to route every possible
+    natural-language task.
+
+    \item The system will use commercially available model APIs
+    and will not attempt to train a large language model from
+    scratch.
+
+    \item Routing decisions should be lightweight so that the
+    cost and latency introduced by the gating layer do not
+    outweigh the savings achieved through model selection.
+
+    \item The project will emphasize measurable evaluation,
+    reproducibility, and system correctness rather than
+    claiming a new state-of-the-art language model.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Solution Approach%
+  \texorpdfstring{\BvrHint{\ldots Engineering focus}}{}}
+% -----------------------------------------------------
+
+This is an engineering-focused AI systems project. The main
+focus is reliable model routing, measurable cost-quality
+optimization, and evaluation rather than training a new
+foundation model.
+
+% -----------------------------------------------------
+\subsection{Prompt difficulty classification%
+  \texorpdfstring{\BvrHint{\ldots routing signal}}{}}
+% -----------------------------------------------------
+
+The gating engine will classify coding requests using a
+combination of observable task characteristics:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Task type:} explanation, code generation,
+    debugging, optimization, refactoring, testing, or
+    architecture.
+
+    \item \textbf{Reasoning requirement:} whether the task
+    requires straightforward generation or multi-step
+    reasoning and problem solving.
+
+    \item \textbf{Context complexity:} approximate amount and
+    structure of code or repository context supplied to the
+    model.
+
+    \item \textbf{Implementation complexity:} number of
+    components, dependencies, edge cases, or interacting
+    requirements.
+
+    \item \textbf{Routing confidence:} confidence in the
+    selected difficulty tier, allowing uncertain requests
+    to be routed more conservatively.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Gating and model-selection policy}
+% -----------------------------------------------------
+
+The first version will use a transparent routing policy that
+maps difficulty tiers to model tiers. Easy requests will be
+directed toward a faster and lower-cost model, moderate
+requests toward a balanced model, and difficult requests
+toward a stronger reasoning-capable model.
+
+The policy will be evaluated rather than assuming that the
+strongest model is always optimal. If the system detects low
+confidence or a task that exceeds the expected capability of
+the selected model, a fallback mechanism can escalate the
+request to a stronger model.
+
+% -----------------------------------------------------
+\subsection{Evaluation architecture%
+  \texorpdfstring{\BvrHint{\ldots quality-aware routing}}{}}
+% -----------------------------------------------------
+
+A separate evaluation layer will compare routing decisions
+against baseline strategies. The evaluation layer will
+consider:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item correctness of generated code,
+    \item test-case pass rate where executable tests are
+    available,
+    \item token consumption and estimated inference cost,
+    \item response latency,
+    \item routing accuracy,
+    \item and the percentage of tasks successfully handled
+    without escalation.
+
+\end{itemize}
+
+This allows the project to measure whether lower-cost routing
+actually preserves useful coding performance.
+
+% -----------------------------------------------------
+\subsection{System architecture%
+  \texorpdfstring{\BvrHint{\ldots gateway-based solution}}{}}
+% -----------------------------------------------------
+
+A typical architecture will contain the following components:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Client/API layer:} accepts coding prompts
+    and optional code or repository context.
+
+    \item \textbf{Prompt analyzer:} extracts task and
+    complexity signals.
+
+    \item \textbf{Gating engine:} calculates the difficulty
+    tier and routing confidence.
+
+    \item \textbf{Model router:} maps the decision to the
+    selected Claude model and forwards the request.
+
+    \item \textbf{Evaluation and logging layer:} stores
+    routing decisions, latency, usage, and evaluation results.
+
+    \item \textbf{Dashboard or reporting layer:} presents
+    model utilization, cost savings, quality, and routing
+    performance.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{CI/CD and fast delivery enabler}
+% -----------------------------------------------------
+
+CI/CD will be used to:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Automatically build and run unit and integration
+    tests on every change.
+
+    \item Validate routing rules and API integrations before
+    deployment.
+
+    \item Produce repeatable deployment artifacts for a
+    staging environment.
+
+    \item Enable safe and frequent improvements to the
+    routing policy and evaluation pipeline.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Evaluation Criterion%
+  \texorpdfstring{\BvrHint{\ldots measurable and attributable}}{}}
+% -----------------------------------------------------
+
+We define success using measurable metrics tied directly to
+model-selection efficiency and coding quality.
+
+% -----------------------------------------------------
+\subsection{Primary evaluation metric}
+% -----------------------------------------------------
+
+\textbf{Cost-quality efficiency:} the primary objective is to
+reduce average model inference cost while maintaining coding
+quality close to a strong-model baseline.
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Target:} demonstrate a measurable reduction
+    in average inference cost compared with always routing
+    requests to the strongest available model, without a
+    significant decrease in correctness.
+
+    \item \textbf{Attribution:} compare identical benchmark
+    prompts under the baseline and SAGE routing policies and
+    record model usage, token consumption, latency, and
+    evaluation scores.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Secondary evaluation metrics}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Code correctness:} percentage of generated
+    solutions that pass predefined tests where executable
+    test cases are available.
+
+    \item \textbf{Quality retention:} compare SAGE responses
+    against responses generated by a strong-model baseline
+    using task-specific evaluation criteria.
+
+    \item \textbf{Cost reduction:} percentage reduction in
+    estimated model inference cost relative to the
+    always-strong-model baseline.
+
+    \item \textbf{Latency reduction:} average and median
+    response-time improvement resulting from routing simpler
+    tasks to faster models.
+
+    \item \textbf{Routing accuracy:} percentage of tasks for
+    which the selected model tier is judged sufficient for
+    the task.
+
+    \item \textbf{Escalation rate:} percentage of requests
+    initially routed to a lower tier that require escalation
+    to a stronger model.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Benchmark validation plan%
+  \texorpdfstring{\BvrHint{\ldots high-level}}{}}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Build a representative benchmark of coding prompts
+    covering explanation, generation, debugging, refactoring,
+    algorithms, testing, and multi-step engineering tasks.
+
+    \item Divide prompts into difficulty categories using
+    clearly defined criteria and, where possible, human
+    validation.
+
+    \item Run the same benchmark using an always-strong-model
+    baseline and the SAGE routing policy.
+
+    \item Compare correctness, cost, latency, model
+    utilization, and escalation behavior.
+
+    \item Analyze failure cases where the router selected a
+    model that was too weak or unnecessarily strong.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Scalability%
+  \texorpdfstring{\BvrHint{\ldots with foresight}}{}}
+% -----------------------------------------------------
+
+The proposition should scale in both theoretical and
+practical senses.
+
+\begin{enumerate}[leftmargin=0.7cm]
+
+    \item \textbf{Scalable (theoretically):} The routing
+    architecture should support increasing numbers of coding
+    requests by:
+
+    \begin{itemize}[leftmargin=0.7cm]
+        \item keeping the routing layer lightweight,
+        \item separating prompt analysis from model execution,
+        \item using asynchronous request handling where
+        appropriate,
+        \item and storing evaluation data independently from
+        the request path.
+    \end{itemize}
+
+    \item \textbf{Operationally deployable (practically):}
+    The system should be deployable as a gateway service:
+
+    \begin{itemize}[leftmargin=0.7cm]
+        \item containerized backend,
+        \item managed database or logging store,
+        \item configurable model-provider credentials,
+        \item and CI/CD pipeline for staging and production.
+    \end{itemize}
+
+\end{enumerate}
+
+% -----------------------------------------------------
+\section{Engine availability heuristic}
+% -----------------------------------------------------
+
+A mature set of software components and AI services is
+available to implement the proposed system:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Backend framework for exposing the routing API.
+
+    \item Claude model APIs for model execution.
+
+    \item Standard machine-learning or rule-based techniques
+    for prompt classification and scoring.
+
+    \item Database or structured storage for prompts,
+    routing decisions, evaluation results, and usage data.
+
+    \item Testing frameworks for unit, integration, and
+    benchmark evaluation.
+
+    \item Containerization and CI/CD tooling for repeatable
+    deployment.
+
+\end{itemize}
+
+We will use these mature components to focus on routing
+strategy, evaluation, correctness, and measurable
+cost-quality optimization rather than building model
+infrastructure from scratch.
+
+% -----------------------------------------------------
+\section{Project scope and deliverables%
+  \texorpdfstring{\BvrHint{\ldots iteration-friendly}}{}}
+% -----------------------------------------------------
+
+\subsection{Initial deliverable%
+  \texorpdfstring{\BvrHint{\ldots first iteration}}{}}
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Coding prompt gateway/API.
+
+    \item Initial difficulty classification scheme with
+    transparent routing rules.
+
+    \item Integration with multiple Claude model tiers.
+
+    \item Basic logging of selected model, latency, and
+    token usage.
+
+    \item A small benchmark dataset covering multiple coding
+    difficulty levels.
+
+    \item Baseline comparison against always using a strong
+    model.
+
+    \item CI: build, unit tests, linting, and routing tests.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Subsequent deliverables}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Improved difficulty classifier based on benchmark
+    results.
+
+    \item Confidence-aware routing and automatic escalation
+    for uncertain or failed tasks.
+
+    \item Expanded evaluation suite for code correctness,
+    cost, latency, and quality retention.
+
+    \item Dashboard/report showing model distribution,
+    estimated cost savings, routing accuracy, and failure
+    cases.
+
+    \item Support for richer repository and multi-file
+    context analysis.
+
+    \item Optimization of the routing policy using observed
+    evaluation results.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Risks and mitigations}
+% -----------------------------------------------------
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Incorrect difficulty classification:}
+    define explicit classification criteria, maintain a
+    benchmark set, and use confidence-aware fallback to a
+    stronger model.
+
+    \item \textbf{Quality degradation:} evaluate routed
+    responses against a strong-model baseline and prioritize
+    correctness over cost when the router is uncertain.
+
+    \item \textbf{Routing overhead:} keep the gating layer
+    lightweight so that analysis cost and latency do not
+    eliminate the benefits of model selection.
+
+    \item \textbf{Changing model capabilities or pricing:}
+    keep model-selection policies configurable rather than
+    hard-coding assumptions about a particular model.
+
+    \item \textbf{Evaluation ambiguity:} define benchmark
+    tasks and objective metrics such as test pass rate,
+    token usage, latency, and estimated cost before
+    comparing routing strategies.
+
+    \item \textbf{API availability and limits:} use a staging
+    environment, implement error handling, and maintain
+    clear separation between routing logic and provider
+    integration.
+
+\end{itemize}
+
+% -----------------------------------------------------
+\section{Summary}
+% -----------------------------------------------------
+
+This project proposes SAGE, a deployable gating engine for
+cost-efficient selection of Claude models for coding tasks.
+It addresses the practical problem of using unnecessarily
+powerful models for simple requests while avoiding quality
+loss on difficult programming tasks. The project meets the
+course criteria by emphasizing rapid engineering iterations,
+CI/CD, measurable evaluation, and scalability readiness.
+
+The key contribution is not a new language model, but a
+measurable model-routing system that attempts to achieve a
+better tradeoff between coding quality, inference cost, and
+response latency. By comparing SAGE against an
+always-strong-model baseline, the project will demonstrate
+whether intelligent model selection can provide meaningful
+efficiency gains while preserving useful coding performance.
+
+% -----------------------------------------------------
+\end{document}
