@@ -1,109 +1,91 @@
-Week 2: Open-Source LLM Research and Qwen Model Setup
+# Week 2: Open-Source LLM Research and Qwen Model Setup
 
-Work Completed
+## Work Completed
 
-During Week 2, I focused on researching suitable open-source Large Language Models (LLMs) that could be integrated into our coding benchmark evaluation framework. The primary objective was to identify a model that could generate code effectively while also being practical to run locally using available computational resources.
+During Week 2, I focused on researching suitable **open-source Large Language Models (LLMs)** that could be used for our coding benchmark evaluation. The main objective was to identify a model that provides good code-generation capabilities while also being practical to run locally on available hardware.
 
-Research on Open-Source LLMs
+### Research on Open-Source LLMs
 
-I researched and compared several open-source LLMs that are suitable for code generation and programming-related tasks.
+I researched and compared several open-source LLMs that are suitable for **code generation and programming-related tasks**.
 
 The comparison focused on factors such as:
 
-Coding and reasoning capabilities.
+* Coding and reasoning capabilities.
+* Number of parameters and computational requirements.
+* Availability of different model sizes.
+* Support for local inference.
+* Compatibility with tools such as **Ollama**.
+* Inference speed and resource requirements.
+* Suitability for automated coding benchmark evaluation.
+* Ability to generate executable and reliable code.
 
-Number of parameters and computational requirements.
+During this research, I came across the **Qwen2.5-Coder** family of models, which is specifically designed and optimized for coding-related tasks. The availability of multiple parameter sizes made it particularly suitable for our project, as different versions could be tested under different computational constraints.
 
-Availability of models for local inference.
+### Selection of Qwen2.5-Coder
 
-Compatibility with frameworks such as Ollama.
+After researching the available options, I selected the **Qwen2.5-Coder** model family as a suitable choice for our coding benchmark experiments.
 
-Response quality for programming problems.
+A major advantage of the Qwen2.5-Coder family was the availability of multiple model sizes. This allows us to study how **model size and parameter count affect code-generation performance** while keeping the underlying model family consistent.
 
-Inference speed and memory requirements.
+The models can also be run locally, which is useful for our project because it allows us to perform experiments without depending entirely on external APIs or cloud-based inference services.
 
-Availability of different model sizes for experimentation.
+### Distribution of Model Versions
 
-Suitability for automated benchmark evaluation.
+To enable parallel experimentation within the team, I distributed **three different versions of the Qwen model** among my team members.
 
-During this research, I came across the Qwen2.5-Coder family of models, which is specifically optimized for coding-related tasks. The availability of multiple parameter sizes made it particularly suitable for our project because different versions could be tested under different hardware and performance constraints.
+Each team member could work with a different parameter configuration and evaluate the model under the same general benchmark methodology.
 
-Selection of Qwen2.5-Coder
+This setup allows us to later compare the relationship between:
 
-After evaluating the available options, I selected the Qwen2.5-Coder model family as one of the primary models for our coding benchmark experiments.
+**Model Size → Computational Requirements → Inference Performance → Coding Accuracy**
 
-One of the major advantages was the availability of multiple model sizes, allowing us to investigate how model scale affects code-generation performance while keeping the overall evaluation methodology consistent.
+It also provides a foundation for investigating whether larger models consistently provide better results on coding benchmark problems.
 
-The model family also provided a practical option for local inference, which is important for our evaluation pipeline because it allows us to run experiments without depending entirely on external API services.
+### Qwen2.5-Coder 7B Setup
 
-Distribution of Model Versions Among Team Members
+For my individual experimentation, I selected the **Qwen2.5-Coder 7B** parameter version and installed it on my PC.
 
-To allow the team to experiment with different model configurations in parallel, I distributed three different Qwen model versions among the team members.
+I configured the required local environment and verified that the model was available for local inference.
 
-This allowed different members to work with different parameter scales and configurations while following the same general evaluation methodology.
+The 7B model was selected to provide a stronger coding model for experimentation while still remaining practical to run on a local machine.
 
-The distribution also helped us compare:
+The local inference workflow was established as:
 
-Model Size → Computational Requirements → Inference Behaviour → Coding Performance
+**Coding Problem → Prompt → Qwen2.5-Coder 7B → Generated Code → Code Processing → Evaluation**
 
-This provided a basis for studying whether increasing the number of model parameters resulted in improvements in code-generation quality and benchmark performance.
+### Initial Model Testing
 
-Qwen2.5-Coder 7B Setup
+After installing the model, I performed initial tests using programming-oriented prompts to verify that the model was functioning correctly and generating usable code.
 
-For my individual experimentation, I selected and installed the Qwen2.5-Coder 7B parameter version on my PC.
+The testing focused on:
 
-I configured the local environment required to run the model and verified that the model could successfully perform code-generation tasks.
+* Checking whether the model correctly understood programming requirements.
+* Verifying that the generated responses contained valid code.
+* Checking whether the generated code could be extracted from the model response.
+* Evaluating whether the model could handle different types of programming problems.
+* Understanding the practical requirements for integrating the model with the benchmark evaluator.
 
-The setup enabled me to generate programming solutions locally and provided the foundation for integrating the model with the automated evaluator developed for the benchmark.
+These initial tests helped establish the model environment that will be used for subsequent benchmark evaluation and experimentation.
 
-The local inference workflow can be represented as:
+### Key Observation
 
-Coding Problem → Prompt → Qwen2.5-Coder 7B → Generated Code → Code Extraction → Test Execution → Evaluation Result
+The research and setup phase highlighted that **model parameter size is an important factor when evaluating coding LLMs**.
 
-Initial Model Testing
+Having multiple versions of the Qwen2.5-Coder family available provides an opportunity to perform controlled comparisons between models of different sizes.
 
-After installation, I performed initial tests using programming-oriented prompts to verify that the model was generating usable code.
+This will allow the project to investigate whether increasing model size leads to consistently better code-generation accuracy, or whether smaller models can perform competitively on specific categories of programming problems.
 
-The testing focused on checking:
-
-Whether the model correctly understood programming requirements.
-
-Whether generated responses contained executable code.
-
-Whether the output format could be processed by an automated evaluator.
-
-Whether the model could handle different types of coding problems.
-
-Whether the generated solutions could be extracted and executed independently.
-
-These initial experiments helped identify practical considerations that would need to be handled during the later development of the benchmark evaluation pipeline.
-
-Key Observation
-
-The research and setup phase showed that model parameter size is an important experimental variable when evaluating coding LLMs.
-
-Using multiple versions of the Qwen2.5-Coder family provides an opportunity to perform controlled comparisons while keeping the underlying model family consistent.
-
-This will allow the project to investigate whether larger models consistently produce more correct and reliable solutions, or whether smaller models can achieve comparable performance on certain categories of programming problems.
-
-Outcome
+## Outcome
 
 By the end of Week 2:
 
-Researched and compared multiple open-source LLMs suitable for code-generation tasks.
-
-Identified the Qwen2.5-Coder family as a suitable candidate for the project.
-
-Studied different parameter-size variants of the model.
-
-Distributed three Qwen model versions among team members for parallel experimentation.
-
-Installed and configured the Qwen2.5-Coder 7B model on my local PC.
-
-Verified that the model was capable of generating programming solutions.
-
-Established the local inference environment required for subsequent benchmark experiments.
-
-Identified model size/parameter count as an important variable for future comparative evaluation.
-
-Prepared the Qwen2.5-Coder 7B setup for integration with the automated coding benchmark evaluator.
+* Researched and compared multiple **open-source LLMs** suitable for code-generation tasks.
+* Identified the **Qwen2.5-Coder** family as a suitable model for the project.
+* Studied different parameter-size variants of the Qwen model.
+* Distributed **three different Qwen model versions** among team members for parallel experimentation.
+* Installed and configured the **Qwen2.5-Coder 7B** model on my PC.
+* Verified that the model was functioning correctly for local inference.
+* Performed initial code-generation tests using programming prompts.
+* Established the local model environment required for further benchmark experiments.
+* Identified **model size and parameter count** as important variables for comparative evaluation.
+* Prepared the Qwen2.5-Coder 7B setup for integration with the coding benchmark evaluation pipeline.
