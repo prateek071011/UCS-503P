@@ -1,0 +1,105 @@
+{
+  "total_problems": 1500,
+  "source_counts": {
+    "apps": 600,
+    "codecontests": 350,
+    "humaneval_plus": 163,
+    "mbpp": 387
+  },
+  "task_type_counts": {
+    "function": 550,
+    "stdin_stdout": 950
+  },
+  "difficulty_counts": {
+    "null": 550,
+    "interview": 122,
+    "competition": 302,
+    "easy": 336,
+    "medium": 63,
+    "hard": 127
+  },
+  "difficulty_counts_by_source": {
+    "mbpp": {
+      "null": 387
+    },
+    "humaneval_plus": {
+      "null": 163
+    },
+    "apps": {
+      "interview": 122,
+      "competition": 239,
+      "easy": 239
+    },
+    "codecontests": {
+      "medium": 63,
+      "hard": 127,
+      "easy": 97,
+      "competition": 63
+    }
+  },
+  "expected_source_counts": {
+    "mbpp": 387,
+    "humaneval_plus": 163,
+    "apps": 600,
+    "codecontests": 350,
+    "_note": "MBPP 350+37 and HumanEval+ 200 were re-planned to MBPP 387 / HumanEval+ 163; see notes."
+  },
+  "sources": {
+    "mbpp": "google-research-datasets/mbpp (full, 974 problems)",
+    "humaneval_plus": "evalplus/humanevalplus (164 problems)",
+    "apps": "codeparrot/apps (train + introductory test split), stdin/stdout subset",
+    "codecontests": "deepmind/code_contests (valid + test + train shard 6)"
+  },
+  "excluded_problems": [
+    {
+      "source": "humaneval_plus",
+      "problem_id": "HumanEval/32",
+      "reason": "Excluded: non-deterministic floating-point root-finder (find_zero); EvalPlus test harness incompatible and violates deterministic-output requirement."
+    },
+    {
+      "source": "mbpp",
+      "problem_id": "mbpp_927",
+      "reason": "reference solution failed its official tests"
+    },
+    {
+      "source": "mbpp",
+      "problem_id": "mbpp_180",
+      "reason": "reference solution failed its official tests"
+    },
+    {
+      "source": "mbpp",
+      "problem_id": "mbpp_367",
+      "reason": "reference solution failed its official tests"
+    }
+  ],
+  "excluded_summary": {
+    "humaneval_plus_nondeterministic": 1,
+    "mbpp_excluded": 3,
+    "apps_callbased_excluded_by_design": "all input_output-with-fn_name problems (not stdin/stdout)",
+    "apps_codecontests_unverifiable": "candidates whose reference solution did not reproduce expected output were skipped during selection"
+  },
+  "notes": [
+    "HumanEval+ contains only 164 problems total (fixed benchmark size); the spec's 200 was impossible without fabrication. Per user decision the 36-problem gap was reallocated to MBPP (MBPP 387, HumanEval+ 163).",
+    "HumanEval+ 163 (not 164): HumanEval/32 excluded as non-deterministic (see excluded list).",
+    "APPS: only stdin/stdout problems are included (task_type=stdin_stdout). Call-based APPS problems (input_output contains 'fn_name') were excluded by design since the spec requires APPS to be stdin/stdout. APPS train has few pure-stdin problems, so introductory problems were supplemented from the APPS test split.",
+    "APPS/CodeContests: every included problem's reference solution was executed against its tests; only problems whose reference solution reproduces the exact expected stdout were kept (this also filters non-deterministic / multiple-valid-output / special-judge problems).",
+    "CodeContests reference solutions are official accepted PYTHON3 (language==3) submissions; difficulty derived from cf_rating (<1300 easy, 1300-1699 medium, 1700+ hard, unrated -> competition).",
+    "MBPP/HumanEval+ have no per-problem difficulty metadata in the source, so human_difficulty is null for those sources (not invented).",
+    "Recommended evaluator timeout: >=30s per problem. humaneval_plus_139 (special_factorial) reference runs ~11s due to large-integer factorial test inputs.",
+    "HumanEval+ tests are the official EvalPlus check functions (they import numpy); each record's tests[0] is the full check plus a call check(<entry_point>)."
+  ],
+  "validation_summary": {
+    "json_valid": true,
+    "unique_problem_ids": true,
+    "total_records": 1500,
+    "static_check_failures": 0,
+    "reference_solution_exec_failures": 0,
+    "records_without_reference_solution": 0,
+    "all_reference_solutions_pass_tests": true,
+    "duplicate_problems": 0,
+    "internet_required": 0,
+    "human_eval_required": 0,
+    "external_files_required": 0,
+    "method": "Every reference solution was executed against its tests (function: assertions; stdin_stdout: subprocess stdin->stdout exact match after trailing-whitespace normalization)."
+  }
+}
