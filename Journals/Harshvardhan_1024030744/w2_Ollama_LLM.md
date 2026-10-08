@@ -1,4 +1,4 @@
-# Week 3: Open-Source LLM Environment and Ollama Model Setup
+# Week 2: Open-Source LLM Environment and Ollama Model Setup
 
 ## Work Completed
 
